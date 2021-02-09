@@ -1,3 +1,4 @@
+
 %==========================================================================
 %
 %   Author: Thomas Florkowski
@@ -39,7 +40,7 @@ fprintf('Starting Script \n')
 
 %=============== Constants Definition =================
 
-epochs = 400;   %Number of epochs you want to train the network
+epochs = 100;   %Number of epochs you want to train the network
 alpha = 0.00001;%Learning rate for the training process
 
 width=1280; %Width of the picture you are working with
@@ -56,9 +57,11 @@ fprintf('Reading and Preparing Training Data \n')
 
 
 %Picture you want to use for training
-inputPicture = imread('training.png');
+inputPicture = imread('train3a.jpg');
 %Image with the labels corresponding to your inputPicture
-labelPicture = imread('labels_color.png');
+labelPicture = imread('label3a.jpg');
+
+TestPicture = imread('Test_image2.jpg');
 
 %Uncomment the following lines if you want to see your loaded pictures before training
 % imshow(inputPicture);
@@ -68,6 +71,8 @@ labelPicture = imread('labels_color.png');
 
 %Prepare the data for the training
 inputPicture = cast(inputPicture,'double'); %Need to be casted from uint to double
+
+TestPicture = cast(TestPicture,'double');
 
 %Create a matrix with the dimensions of the picture for the later label
 %vector
@@ -86,6 +91,7 @@ labels(labelPicture(:,:,2)>0)=0.99;
 labels = reshape(labels,[],1);   % One column (because of one output neuron)
 inputPicture = reshape(inputPicture,[],3); %Three columns (because three neurons in the input layer)
 
+TestPicture = reshape(TestPicture,[],3);
 
 %Print out debugging statistics
 numCategoryOne=(sum(labels==0.99)*100)/(width*height);
@@ -97,6 +103,8 @@ fprintf(' - Background: %2.2f %%\n',100-numCategoryOne);
 % Only for input values between [-4;4] the sigmoid function shows significant
 % differences in the output
 inputPicture = inputPicture/255;
+
+TestPicture = TestPicture/255;
 
 %=============== Generate Network =================
 fprintf('Generate Network \n')
@@ -140,7 +148,7 @@ fprintf('Training Done\n')
 fprintf('Using Trained Network for Test Prediction\n')
 
 %Use the trained network on the inputPicture to see results
-predOutput = networkPrediction(inputPicture, trainedNetwork);
+predOutput = networkPrediction(TestPicture, trainedNetwork);
 %Round the values to get a 0 or 1
 predOutput = round(predOutput');
 %reshape predOutput to the dimensions of a picture
